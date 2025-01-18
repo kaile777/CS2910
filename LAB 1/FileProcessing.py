@@ -54,13 +54,17 @@ def parseGradesData(raw_list, course_list, student_list):
         if int(sID) == student_list[i].getStudentID():
             if course1_grade != "na":
                 student_list[i].addGrade(Grade.Grade(course_list[0], int(course1_grade)))
+                course_list[0].addStudent(student_list[i])
             if course2_grade != "na":
                 student_list[i].addGrade(Grade.Grade(course_list[1], int(course2_grade)))
+                course_list[1].addStudent(student_list[i])
             if course3_grade != "na":
                 student_list[i].addGrade(Grade.Grade(course_list[2], int(course3_grade)))
+                course_list[2].addStudent(student_list[i])
             if course4_grade != "na":
                 student_list[i].addGrade(Grade.Grade(course_list[3], int(course4_grade)))
-
+                course_list[3].addStudent(student_list[i])
+                
             
         
 

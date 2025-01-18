@@ -37,14 +37,18 @@ def main():
     
     Select an option:
     
-    1. Print list of students
-    2. Print list of courses
-    3. Add Student
-    4. Add Course
-    5. Add Grade
-    6. Update Student information
-    7. Search Course
-    8. Search Student
+    1.  Print list of students
+    2.  Print list of courses
+    3.  Add Student
+    4.  Add Course
+    5.  Add Grade
+    6.  Update Student information
+    7.  Search Course
+    8.  Search Student
+    9.  Display Student Courses & Grades
+    10. Display Student Average Total
+    11. Display Student Average (Term)
+    12. Display Course Average
     
     0. EXIT PROGRAM
     
@@ -399,13 +403,201 @@ def main():
                     os.system('cls')
                 elif option == "N":
                     stay_8 = True
+        
+        elif option == 9:
+            stay_9 = True
+            
+            while stay_9 == True:
+                os.system('cls')
+                lName = input("Enter Student Last Name: ").upper()
                 
+                students_w_lastName = []
+                # check for multiple last names
+                for student in s_list:
+                    if student.lastName == lName:
+                        students_w_lastName.append(student)
+                if len(students_w_lastName) > 1:
+                    print(f"Multiple students with last name: {lName}\n")
+                    for student in students_w_lastName:
+                        print(student, "\n")
+                    sID = int(input("Please select student by ID: "))
+                    match = False
+                    for student in students_w_lastName:
+                        if student.studentID == sID:
+                            # display student grades
+                            for grade in student.grades:
+                                grade.getInfo()
+                                match = True
+                    if match == False:
+                        print("Student ID entered does not match student list!")
+                elif len(students_w_lastName) == 1:
+                    for student in students_w_lastName:
+                        # display student grades
+                            for grade in student.grades:
+                                grade.getInfo()
+                else:
+                    print(f"No students with last name, {lName}")
+                    
+                option = input("Exit (Y/N): ").upper()                
+                if option == "Y":
+                    stay_9 = False
+                    os.system('cls')
+                elif option == "N":
+                    stay_9 = True
+        
+        elif option == 10:
+            stay_10 = True
+            
+            while stay_10 == True:
+                os.system('cls')
+                lName = input("Enter Student Last Name: ").upper()
                 
+                students_w_lastName = []
+                # check for multiple last names
+                for student in s_list:
+                    if student.lastName == lName:
+                        students_w_lastName.append(student)
+                if len(students_w_lastName) > 1:
+                    print(f"Multiple students with last name: {lName}\n")
+                    for student in students_w_lastName:
+                        print(student, "\n")
+                    sID = int(input("Please select student by ID: "))
+                    match = False
+                    for student in students_w_lastName:
+                        if student.studentID == sID:
+                            # display student average
+                            courseCount = 0
+                            total = 0
+                            match = True
+                            for grade in student.grades:
+                                if grade.grade != "na":
+                                    courseCount += 1
+                                    total += grade.grade
+                            if courseCount > 0:
+                                average = (total // courseCount) 
+                                print(f"Total Average: {average}%")
+                            
+                    if match == False:
+                        print("Student ID entered does not match student list!")
+                elif len(students_w_lastName) == 1:
+                    for student in students_w_lastName:
+                        # display student average
+                        for grade in student.grades:
+                            if grade.grade != "na":
+                                    courseCount += 1
+                                    total += grade.grade
+                            if courseCount > 0:
+                                average = (total // courseCount) 
+                                print(f"Total Average: {average}%")
+
+                else:
+                    print(f"No students with last name, {lName}")
+                    
+                option = input("Exit (Y/N): ").upper()                
+                if option == "Y":
+                    stay_10 = False
+                    os.system('cls')
+                elif option == "N":
+                    stay_10 = True
+            
+        elif option == 11:
+            stay_11 = True
+            
+            while stay_11 == True:
+                os.system('cls')
+                lName = input("Enter Student Last Name: ").upper()
+                semester = input("Enter Term (Fall/Winter): ").upper()
+                
+                students_w_lastName = []
+                # check for multiple last names
+                for student in s_list:
+                    if student.lastName == lName:
+                        students_w_lastName.append(student)
+                if len(students_w_lastName) > 1:
+                    print(f"Multiple students with last name: {lName}\n")
+                    for student in students_w_lastName:
+                        print(student, "\n")
+                    sID = int(input("Please select student by ID: "))
+                    match = False
+                    for student in students_w_lastName:
+                        if student.studentID == sID:
+                            # display student average
+                            courseCount = 0
+                            total = 0
+                            match = True
+                            for grade in student.grades:
+                                if grade.grade != "na" and grade.course.semester == semester:
+                                    courseCount += 1
+                                    total += grade.grade
+                            if courseCount > 0:
+                                average = (total // courseCount) 
+                                print(f"Total Average: {average}%")
+                            
+                    if match == False:
+                        print("Student ID entered does not match student list!")
+                elif len(students_w_lastName) == 1:
+                    for student in students_w_lastName:
+                        # display student average
+                        for grade in student.grades:
+                            if grade.grade != "na":
+                                    courseCount += 1
+                                    total += grade.grade
+                            if courseCount > 0:
+                                average = (total // courseCount) 
+                                print(f"Total Average: {average}%")
+
+                else:
+                    print(f"No students with last name, {lName}")
+                    
+                option = input("Exit (Y/N): ").upper()                
+                if option == "Y":
+                    stay_11 = False
+                    os.system('cls')
+                elif option == "N":
+                    stay_11 = True
+                    
+        elif option == 12:
+            stay_12 = True
+            
+            while stay_12 == True:
+                os.system('cls')
+                print("Seach Course Average (%)\n")
+                
+                courseName = input("Enter Course Name: ").upper()
+                
+                match = False
+                for course in c_list:
+                    if courseName == course.name:
+                        match = True
+                        # search and add student grades
+                        count = 0
+                        total = 0
+                        for student in course.studentsInCourse:
+                            for grade in student.grades:
+                                if grade.course.name == courseName:
+                                    total += grade.grade
+                                    count += 1
+                                    
+                        if count > 0:
+                            term_avg = total // count
+
+                if match == True:
+                    print(f"Term Average for {courseName}: {term_avg}%")
+                else:
+                    print("Course has no grades associated with it!") 
+                option = input("\nExit (Y/N): ").upper()                
+                if option == "Y":
+                    stay_10 = False
+                    os.system('cls')
+                elif option == "N":
+                    stay_10 = True
+            
         elif option == 0:
             stay_program = False
         
         else:
             print("Invalid Input!")
+        
         
         
 

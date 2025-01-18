@@ -5,6 +5,8 @@ class Course:
         self.semester = semester
         self.code = code
         
+        self.studentsInCourse = []
+        
     def __str__(self):
         return f"{self.name}, {self.semester}, {self.code}"
         
@@ -20,4 +22,5 @@ class Course:
     def getInfo(self):
         print(f"Name: {self.name}\nSemester: {self.semester}\nCode: {self.code}")
         
-    
+    def addStudent(self, student):
+        self.studentsInCourse.append(student)
