@@ -45,7 +45,8 @@ def main():
     6. Update Student information
     7. Search Course
     8. Search Student
-    100. Exit Program
+    
+    0. EXIT PROGRAM
     
     """
     stay_program = True
@@ -340,8 +341,8 @@ def main():
                 
                 Search for Student
                 
-                1. Enter student last name
-                2. Enter student phone number (last 4-digits)
+                1. Search by last name
+                2. Search by phone number (last 4-digits)
                 3. Exit
                 
                 """
@@ -350,17 +351,57 @@ def main():
                 option = int(input("->  "))
                 
                 if option == 1:
-                    pass
+                    lName = input("Enter Last Name: ").upper()
+                    students_w_lastName = []
+                    # check for multiple last names
+                    for student in s_list:
+                        if student.lastName == lName:
+                            students_w_lastName.append(student)
+                    if len(students_w_lastName) > 1:
+                        print(f"Multiple students with last name: {lName}\n")
+                        for student in students_w_lastName:
+                            print(student, "\n")
+                        sID = int(input("Please select student by ID: "))
+                        match = False
+                        for student in students_w_lastName:
+                            if student.studentID == sID:
+                                print(student)
+                                match = True
+                        if match == False:
+                            print("Student ID entered does not match student list!")
+                    elif len(students_w_lastName) == 1:
+                        for student in students_w_lastName:
+                            print(student)
+                    else:
+                        print(f"No students with last name, {lName}")
                 elif option == 2:
-                    pass
+                    number = input("Enter last 4 digits of student phone #: ")
+                    match = False
+                    for student in s_list:
+                        last4digits = str(student.phoneNum)
+                        last4digits = last4digits[-4:]
+                        if last4digits == number[-4:]:
+                            os.system('cls')
+                            print(student,"\n")
+                            match = True
+                    if match == False:
+                        number = number[-4:]
+                        print(f"Student with phone # ending with: {number}, not found!")
                 elif option == 3:
                     stay_8 = False
                     os.system('cls')
                 else:
                     print("Invalid Input!")
+                    
+                option = input("Exit (Y/N): ").upper()                
+                if option == "Y":
+                    stay_8 = False
+                    os.system('cls')
+                elif option == "N":
+                    stay_8 = True
                 
                 
-        elif option == 100:
+        elif option == 0:
             stay_program = False
         
         else:
