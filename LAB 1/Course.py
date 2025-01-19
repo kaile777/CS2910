@@ -1,11 +1,15 @@
 class Course:
     
-    def __init__(self, name, semester, code):
+    numberOfCourses = 0
+    
+    def __init__(self, name, semester):
         self.name = name
         self.semester = semester
-        self.code = code
         
         self.studentsInCourse = []
+        
+        Course.numberOfCourses += 1
+        self.code = Course.numberOfCourses
         
     def __str__(self):
         return f"{self.name}, {self.semester}, {self.code}"
@@ -24,3 +28,4 @@ class Course:
         
     def addStudent(self, student):
         self.studentsInCourse.append(student)
+        

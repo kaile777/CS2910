@@ -1,6 +1,8 @@
-import Grade as Grade
-import Course as Course
-
+import Grade
+import Course
+import csv
+import os
+import FileProcessing as fp
 
 class Student:
     
@@ -9,7 +11,7 @@ class Student:
     def __init__(self, firstName, lastName, phoneNum, email):
         self.firstName = firstName
         self.lastName = lastName
-        self.phoneNum = phoneNum
+        self.phoneNum = int(phoneNum)
         self.email = email
         
         Student.__numberOfStudents += 1
@@ -19,6 +21,9 @@ class Student:
         # must hold grade objects
         # once grades.csv is parsed, grades[] will be updated
         self.grades = []
+        
+        for i in range(0, Course.Course.numberOfCourses):
+            self.grades.append("na")
         
     def __str__(self):
         return f"{self.firstName} {self.lastName}\nID: {self.studentID}\n{self.phoneNum}\n{self.email}"
@@ -39,7 +44,7 @@ class Student:
         return self.email
     
     def getStudentID(self):
-        return self.studentID
+        return int(self.studentID)
 
     def addGrade(self, grade):
         self.grades.append(grade)
@@ -48,18 +53,59 @@ class Student:
         for grade in self.grades:
             print(grade)
         
-    def updateFirstName(self, new_name):
-        self.firstName = new_name
+    def updateStudent(student, s_file):
         
-    def updateLastName(self, new_name):
-        self.lastName = new_name
+        prompt = """
+                    
+        Choose Which to Update:
+        1. First Name
+        2. Last Name
+        3. Phone Number
+        4. Email
         
-    def updatePhoneNumber(self, new_number):
-        self.phoneNum = new_number
-    
-    def updateEmail(self, new_email):
-        self.email = new_email
+        0. Back
         
-    
+        """
         
+        keep_updating = True
+                    
+        while keep_updating == True:
+            print(prompt, "\n")
+            option = int(input("->  "))
+            
+            pos_lName = 1
+            pos_fName = 2
+            pos_phone = 3
+            pos_email = 4
+
+            
+            if option == 1:
+                firstName = input("Enter First Name: ").upper()
+                student.firstName = firstName
+                fp.udpateIndex(s_file, pos_fName, firstName, student.studentID)
+            elif option == 2:
+                lastName = input("Enter Last Name: ").upper()
+                student.lastName = lastName
+                fp.udpateIndex(s_file, pos_lName, lastName, student.studentID)
+            elif option == 3:
+                phoneNum = int(input("Enter Phone Number: "))
+                student.phoneNum = phoneNum
+                fp.udpateIndex(s_file, pos_phone, phoneNum, student.studentID)
+            elif option == 4:
+                email = input("Enter email: ")
+                student.email = email
+                fp.udpateIndex(s_file, pos_email, email, student.studentID)
+            elif option == 0:
+                return
+            option = input("Continue updating this student? (Y/N) ").upper()
+            
+            if option == "Y":
+                keep_updating = True
+                os.system('cls')
+            elif option == "N":
+                keep_updating = False
+            else:
+                print("Invalid Input!")
+
+
 

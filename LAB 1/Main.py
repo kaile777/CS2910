@@ -136,6 +136,22 @@ def main():
                 email =        input("Enter email        : ")
                 s = Student.Student(firstName.upper(), lastName.upper(), phoneNum, email)
                 s_list.append(s)
+                
+                # write to students.csv file
+                s_info_arr = [str(s.getStudentID()), s.getLastName(), s.getFirstName(), str(s.getPhoneNum()), s.getEmail()]
+                fp.writeToFile(s_info_arr, s_file)
+                
+                
+                # write to grades.csv file too
+                # only adds ID, first name, and last name
+                g_info_arr = [str(s.getStudentID()), s.getLastName(), s.getFirstName()]
+                fp.writeToFile(g_info_arr, g_file)
+                #
+                # depending on total course number, append "na" to new student addition
+                # specify student ID
+                fp.appendToFileElements(g_file, s)
+                
+                
                 option = input("Exit (Y/N): ").upper()
                 if option == "Y":
                     stay_3 = False
@@ -145,20 +161,30 @@ def main():
                 else:
                     print("Incorrect input!")
 
-                    
+
         elif option == 4:
             stay_4 = True
-            
+
             while stay_4 == True:
                 os.system('cls')
-                
+
                 print("Add Course:\n")
-                name =     input("Enter name of course  : ")
+                name =     input("Enter name of course  : ").upper()
                 semester = input("Enter course semester : ")
-                code =     input("Enter course code     : ")
-                c = Course.Course(name, semester.upper(), code)
+
+                # add course object to course list
+                c = Course.Course(name, semester.upper())
                 c_list.append(c)
-                print("\nCourse added:\n", course)
+
+                # add course to csv file
+                c_info_arr = [c.getName(), c.getSemester(), str(c.getCode())]
+                fp.writeToFile(c_info_arr, c_file)
+
+                # append course to grades csv file
+                # automatically "na" for students until grade is added
+                fp.appendToFileElements(g_file)
+
+                print("\nCourse added:\n", c)
                 option = input("Exit (Y/N): ").upper()
                 if option == "Y":
                     os.system('cls')
@@ -169,9 +195,9 @@ def main():
                     print("Incorrect input!")
 
         elif option == 5:
-            
+
             os.system('cls')
-            
+
             stay_5 = True
             
             while stay_5 == True:
@@ -182,26 +208,19 @@ def main():
                 
                 # check that student exists to be updated
                 found = False
-                inClass = False
                 gradeAdded = False
                 for student in s_list:
                     if student.lastName == lastName:
                         found = True
-                        # check that student is registered in specified class
-                        for grade in student.grades:
-                            if grade.course.code == courseCode:
-                                inClass = True
-                        if inClass == False:
-                            print("Student not in specified class!")
-                        else:
-                            grade_value = int(input("Enter grade (%): "))
-                            for course in c_list:
-                                if course.code == courseCode:
-                                    c = course
-                                    new_grade = Grade.Grade(c, grade_value)
-                                    student.addGrade(new_grade)
-                                    gradeAdded = True
-                
+                        grade_value = int(input("Enter grade (%): "))
+                        for course in c_list:
+                            if course.code == courseCode:
+                                new_grade = Grade.Grade(course, grade_value)
+                                student.addGrade(new_grade)
+                                course.addStudent(student)
+                                fp.updateGrade(student, g_file, new_grade)
+                                gradeAdded = True
+                                break
                 if gradeAdded == True:
                     print("Grade added successfuly!")
                 elif found == False:
@@ -224,66 +243,26 @@ def main():
             while stay_6 == True:
                 
                 os.system('cls')
-                
                 print("Update Student Information:\n*** Back: Enter 0 ***\n")
-                sID = int(input("Enter student ID: "))
+                sID = int(input("Enter Student ID: "))
                 found = False
-                s = None
-                if sID == 0:
-                    break
                 for student in s_list:
-                    if student.getStudentID() == sID:
+                    if student.studentID == sID:
+                        Student.Student.updateStudent(student, s_file)
                         found = True
-                        s = student
-                        break
+                        
                 if found == False:
                     print("Student not found!")
-                    option = input("Exit (Y/N): ").upper()
-                    if option == "Y":
-                        break
+                
+                option = input("Exit? (Y/N) ").upper()
+                if option == "N":
+                    stay_6 = True
+                    os.system('cls')
+                elif option == "Y":
+                    stay_6 = False
                 else:
-                    prompt = """
-                    
-                    Choose Which to Update:
-                    1. First Name
-                    2. Last Name
-                    3. Phone Number
-                    4. Email
-                    
-                    5. Back
-                    
-                    """
-                    
-                    keep_updating = True
-                    
-                    while keep_updating == True:
-                        print(prompt, "\n")
-                        option = int(input("->  "))
-                        
-                        if option == 1:
-                            firstName = input("Enter First Name: ").upper()
-                            s.updateFirstName(firstName)
-                        elif option == 2:
-                            lastName = input("Enter Last Name: ").upper()
-                            s.updateLastName(lastName)
-                        elif option == 3:
-                            phoneNum = int(input("Enter Phone Number: "))
-                            s.updatePhoneNumber(phoneNum)
-                        elif option == 4:
-                            email = input("Enter email: ")
-                            s.updateEmail(email)
-                        elif option == 5:
-                            break
-                        option = input("Continue updating this student? (Y/N) ").upper()
-                        
-                        if option == "Y":
-                            keep_updating = True
-                            os.system('cls')
-                        elif option == "N":
-                            keep_updating = False
-                        else:
-                            print("Invalid Input!")
-                            
+                    print("Invalid Input!")
+                
         elif option == 7:
             
             stay_7 = True
@@ -457,6 +436,10 @@ def main():
                 for student in s_list:
                     if student.lastName == lName:
                         students_w_lastName.append(student)
+                        
+                courseCount = 0
+                total = 0
+
                 if len(students_w_lastName) > 1:
                     print(f"Multiple students with last name: {lName}\n")
                     for student in students_w_lastName:
@@ -466,13 +449,11 @@ def main():
                     for student in students_w_lastName:
                         if student.studentID == sID:
                             # display student average
-                            courseCount = 0
-                            total = 0
                             match = True
                             for grade in student.grades:
-                                if grade.grade != "na":
+                                if grade.grade_val != "na":
                                     courseCount += 1
-                                    total += grade.grade
+                                    total += int(grade.grade_val)
                             if courseCount > 0:
                                 average = (total // courseCount) 
                                 print(f"Total Average: {average}%")
@@ -482,13 +463,14 @@ def main():
                 elif len(students_w_lastName) == 1:
                     for student in students_w_lastName:
                         # display student average
+                        total = 0
                         for grade in student.grades:
-                            if grade.grade != "na":
+                            if grade.grade_val != "na":
                                     courseCount += 1
-                                    total += grade.grade
-                            if courseCount > 0:
-                                average = (total // courseCount) 
-                                print(f"Total Average: {average}%")
+                                    total += int(grade.grade_val)
+                        if courseCount > 0:
+                            average = (total // courseCount) 
+                            print(f"Total Average: {average}%")
 
                 else:
                     print(f"No students with last name, {lName}")
@@ -513,6 +495,8 @@ def main():
                 for student in s_list:
                     if student.lastName == lName:
                         students_w_lastName.append(student)
+                courseCount = 0
+                total = 0
                 if len(students_w_lastName) > 1:
                     print(f"Multiple students with last name: {lName}\n")
                     for student in students_w_lastName:
@@ -522,13 +506,11 @@ def main():
                     for student in students_w_lastName:
                         if student.studentID == sID:
                             # display student average
-                            courseCount = 0
-                            total = 0
                             match = True
                             for grade in student.grades:
-                                if grade.grade != "na" and grade.course.semester == semester:
+                                if grade.grade_val != "na" and grade.course.semester == semester:
                                     courseCount += 1
-                                    total += grade.grade
+                                    total += int(grade.grade_val)
                             if courseCount > 0:
                                 average = (total // courseCount) 
                                 print(f"Total Average: {average}%")
@@ -539,12 +521,12 @@ def main():
                     for student in students_w_lastName:
                         # display student average
                         for grade in student.grades:
-                            if grade.grade != "na":
+                            if grade.grade_val != "na" and grade.course.semester == semester:
                                     courseCount += 1
-                                    total += grade.grade
-                            if courseCount > 0:
-                                average = (total // courseCount) 
-                                print(f"Total Average: {average}%")
+                                    total += int(grade.grade_val)
+                        if courseCount > 0:
+                            average = (total // courseCount) 
+                            print(f"Total Average: {average}%")
 
                 else:
                     print(f"No students with last name, {lName}")
@@ -566,6 +548,7 @@ def main():
                 courseName = input("Enter Course Name: ").upper()
                 
                 match = False
+                term_avg = 0
                 for course in c_list:
                     if courseName == course.name:
                         match = True
@@ -575,11 +558,12 @@ def main():
                         for student in course.studentsInCourse:
                             for grade in student.grades:
                                 if grade.course.name == courseName:
-                                    total += grade.grade
+                                    total += int(grade.getGrade())
                                     count += 1
                                     
                         if count > 0:
                             term_avg = total // count
+                            break
 
                 if match == True:
                     print(f"Term Average for {courseName}: {term_avg}%")
@@ -591,13 +575,15 @@ def main():
                     os.system('cls')
                 elif option == "N":
                     stay_10 = True
+                    
+        elif option == -1:
+            displayCourseStudents()
             
         elif option == 0:
             stay_program = False
         
         else:
             print("Invalid Input!")
-        
         
         
 
