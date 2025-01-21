@@ -1,12 +1,33 @@
-import Student as Student
-import Course as Course
+import Student
+import Course
 import FileProcessing as fp
 import os
 import Display
 import Grade
-import time
 
-# os.system('cls')
+
+
+
+
+def uniqueLastName(lName, s_list):
+    students_w_lastName = []
+    # check for multiple last names
+    for student in s_list:
+        if student.lastName == lName:
+            students_w_lastName.append(student)
+    if len(students_w_lastName) > 1:
+        return False
+    return True
+        
+
+
+
+def showCourseContents(c_list):
+    for course in c_list:
+        print(f"{course.name}\n**********\n")
+        for student in course.studentsInCourse:
+            print(student, "\n")
+
 
 
 def main():
@@ -55,7 +76,6 @@ def main():
     """
     stay_program = True
     
-    
     while stay_program == True:
         print(title)
         print(main_menu)
@@ -72,6 +92,11 @@ def main():
             2. Display sorted by last name
             3. Exit
             
+            """
+            
+            """
+            TODO: Need to add duplicate last name checks
+                  Handle repeated input for last name
             """
             stay_1 = True
             while stay_1 == True:
@@ -206,6 +231,47 @@ def main():
                 lastName = input("Enter students last name: ").upper()
                 courseCode = int(input("Enter course code: "))
                 
+                """
+                TODO: Need to add duplicate last name checks
+                      Handle repeated input for last name
+                """
+                
+                uniqueLastName = uniqueLastName(lastName, s_list)
+                _student = None
+                found = False
+                if uniqueLastName == False:
+                    print(f"*** Multiple students with {lastName}! ***\n")
+                    for student in s_list:
+                        print(student)
+                    sID = int(input("Please enter sID of student: "))
+                    for student in s_list:
+                        if student.studentID == sID:
+                            _student = student
+                            found = True
+                else:
+                    for student in s_list:
+                        if student.lastName == lastName:
+                            _student = student
+                            found = True
+                
+                while found == False:
+                    print("*** Student not found! ***")
+                    lastName = input("Enter students last name: ").upper()
+                    for student in s_list:
+                        if student.lastName == lastName:
+                            _student = student
+                            found = True
+                    option = input("Exit (y/n): ").upper()
+                    if option == "Y":
+                        os.system('cls')
+                        stay_5 = False
+                    elif option == "N":
+                        stay_5 = True
+                    else:
+                        print("Incorrect input!")
+                        
+                
+                    
                 # check that student exists to be updated
                 found = False
                 gradeAdded = False
@@ -230,7 +296,7 @@ def main():
                 if option == "Y":
                     os.system('cls')
                     stay_5 = False
-                elif option == "Y":
+                elif option == "N":
                     stay_5 = True
                 else:
                     print("Incorrect input!")
@@ -329,6 +395,12 @@ def main():
                 3. Exit
                 
                 """
+                
+                """
+                TODO: Need to add duplicate last name checks
+                      Handle repeated input for last name
+                """
+                
                 print(prompt)
                 
                 option = int(input("->  "))
@@ -391,7 +463,10 @@ def main():
                 lName = input("Enter Student Last Name: ").upper()
                 
                 students_w_lastName = []
-                # check for multiple last names
+                """
+                TODO: Need to add duplicate last name checks
+                      Handle repeated input for last name
+                """
                 for student in s_list:
                     if student.lastName == lName:
                         students_w_lastName.append(student)
@@ -430,6 +505,11 @@ def main():
             while stay_10 == True:
                 os.system('cls')
                 lName = input("Enter Student Last Name: ").upper()
+                
+                """
+                TODO: Need to add duplicate last name checks
+                      Handle repeated input for last name
+                """
                 
                 students_w_lastName = []
                 # check for multiple last names
@@ -489,6 +569,11 @@ def main():
                 os.system('cls')
                 lName = input("Enter Student Last Name: ").upper()
                 semester = input("Enter Term (Fall/Winter): ").upper()
+                
+                """
+            TODO: Need to add duplicate last name checks
+                  Handle repeated input for last name
+                """
                 
                 students_w_lastName = []
                 # check for multiple last names
@@ -560,6 +645,7 @@ def main():
                                 if grade.course.name == courseName:
                                     total += int(grade.getGrade())
                                     count += 1
+                                    break
                                     
                         if count > 0:
                             term_avg = total // count
@@ -571,13 +657,11 @@ def main():
                     print("Course has no grades associated with it!") 
                 option = input("\nExit (Y/N): ").upper()                
                 if option == "Y":
-                    stay_10 = False
+                    stay_12 = False
                     os.system('cls')
                 elif option == "N":
-                    stay_10 = True
-                    
-        elif option == -1:
-            displayCourseStudents()
+                    stay_12 = True
+
             
         elif option == 0:
             stay_program = False

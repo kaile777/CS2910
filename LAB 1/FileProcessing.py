@@ -16,115 +16,80 @@ def getData(file_name):
 
 
 def parseGradesData(raw_list, course_list, student_list):
+    # create 2d array of empty strings
+    string_test = raw_list[0].split(";")
+    cols = len(string_test)
+    rows = len(raw_list)
+    arr = []
+    for _ in range(rows):
+        arr.append([""] * cols)
     
+    
+        
     # outer loop that iterates over each line of raw string
-    for i in range(0, len(raw_list)):
-        element = ""
-        arr = []
+    for i in range(0, len(raw_list)):        
         # inner loop that iterates over each char of the line
-        for j in range(0, len(raw_list[i])):
-            if raw_list[i][j] == "\n":
-                arr.append(element)
-                break
-            if raw_list[i][j] != ";":
-                element += raw_list[i][j]
-            if raw_list[i][j] == ";":
-                arr.append(element)
-                element = ""
+        raw_list[i] = raw_list[i].strip("\n")
+        arr[i] = raw_list[i].split(";")
         
-        sID_index = 0
-        grade_index = 3
-        course_id = 1
+        
+    sID_index = 0
+    grade_index = 3
+    
+    # find student with matching student ID
+    # create grade object
+    student_index = 0 
+    for student in student_list:
 
-        # create grade object 
+        if student.studentID == int(arr[student_index][sID_index]):
+            # reset course ID to 1 for each new student iteration
+            course_id = 1
+            # once student is found, go through grades in arr[]
+            # and extract the course, then create a grade object
+            # using the course and grade_val
+            # append this grade to student.grades array[]
+            
+            for grade_val in arr[student_index][grade_index:]:
+                if grade_val == "na":
+                    course_id += 1
+                elif grade_val != "na":
+                    # get int(grade_val)
+                    value = int(grade_val)
+                    _course = course_list[course_id - 1]
+                    _grade = Grade.Grade(_course, value)
+                    student.grades.append(_grade)
+                    _course.addStudent(student)
+                    course_id += 1
+            
+        student_index += 1
         
-        # find student with matching student ID
-        for student in student_list:
-            if student.studentID == int(arr[sID_index]):
-                # once student is found, go through grades in arr[]
-                # and extract the course, then create a grade object
-                # using the course and grade_val
-                # append this grade to student.grades array[]
-                
-                for grade_val in arr[grade_index:]:
-                    if grade_val != "na":
-                        for course in course_list:
-                            if course_id == course.code:
-                                g = Grade.Grade(course, grade_val)
-                                student.grades.append(g)
-                                course.addStudent(student)
-                                course_id += 1
-                                break
-                break
+        
+        
+        
+        
+        
 
 # takes in course.csv file and parses information
 # returns list of course objects
 def parseCourseData(raw_list):
     course_list = []
-    
-    # outer loop that iterates over each line of raw string
     for i in range(0, len(raw_list)):
-        name = ""
-        semester = ""
-        segment = 0
-        element = ""
-        # inner loop that iterates over each character of the line
-        for j in range(0, len(raw_list[i])):
-            if raw_list[i][j] == "\n":
-                break
-            if raw_list[i][j] != ";":
-                element += raw_list[i][j]
-            if raw_list[i][j] == ";":
-                if segment == 0:
-                    name = element
-                elif segment == 1:
-                    semester = element
-                element = ""
-                segment += 1
-                
-        course = Course.Course(name, semester.upper())
+        raw_list[i] = raw_list[i].strip("\n")
+        c_list = raw_list[i].split(";")
+        course = Course.Course(c_list[0].upper(), c_list[1].upper())
         course_list.append(course)
-        
     return course_list
-
 
 # takes in student.csv file and parses information
 # returns list of student objects
 def parseStudentData(raw_list):
     student_list = []
-    # outer loop that iterates over each line of raw string
     for i in range(0, len(raw_list)):
-        id = 0
-        fName = ""
-        lName = ""
-        phoneNum = 0
-        email = ""
-        element = ""
-        segment = 0
-        # inner loop that iterates over each character of the line
-        for j in range(0, len(raw_list[i])):
-            if raw_list[i][j] == "\n":
-                email = element
-                break
-            if raw_list[i][j] != ";":
-                element += raw_list[i][j]
-            if raw_list[i][j] == ";":
-                if segment == 0:
-                    id = int(element)
-                elif segment == 1:
-                    lName = element
-                elif segment == 2:
-                    fName = element
-                elif segment == 3:
-                    phoneNum = int(element)
-                element = ""
-                segment += 1
-        
-        student = Student.Student(fName.upper(), lName.upper(), phoneNum, email)
+        raw_list[i] = raw_list[i].strip("\n")
+        s_list = raw_list[i].split(";")
+        student = Student.Student(s_list[2].upper(), s_list[1].upper(), int(s_list[3]), s_list[4])
         student_list.append(student)
-        
     return student_list
-
 
 # takes in array of elements to add for grades, students, or courses
 # converts elements into csv format, adding them to appropriate csv file
