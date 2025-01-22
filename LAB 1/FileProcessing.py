@@ -1,9 +1,5 @@
-import Student
-import Course
-import Grade
-import csv
 
-# TODO: refactor imports across all files
+import csv
 
 # Reads data from CSV file
 # Each line is stored in a list
@@ -16,6 +12,7 @@ def getData(file_name):
 
 
 def parseGradesData(raw_list, course_list, student_list):
+    from Grade import Grade
     # create 2d array of empty strings
     string_test = raw_list[0].split(";")
     cols = len(string_test)
@@ -56,7 +53,7 @@ def parseGradesData(raw_list, course_list, student_list):
                     # get int(grade_val)
                     value = int(grade_val)
                     _course = course_list[course_id - 1]
-                    _grade = Grade.Grade(_course, value)
+                    _grade = Grade(_course, value)
                     student.grades.append(_grade)
                     _course.addStudent(student)
                     course_id += 1
@@ -72,22 +69,24 @@ def parseGradesData(raw_list, course_list, student_list):
 # takes in course.csv file and parses information
 # returns list of course objects
 def parseCourseData(raw_list):
+    from Course import Course
     course_list = []
     for i in range(0, len(raw_list)):
         raw_list[i] = raw_list[i].strip("\n")
         c_list = raw_list[i].split(";")
-        course = Course.Course(c_list[0].upper(), c_list[1].upper())
+        course = Course(c_list[0].upper(), c_list[1].upper())
         course_list.append(course)
     return course_list
 
 # takes in student.csv file and parses information
 # returns list of student objects
 def parseStudentData(raw_list):
+    from Student import Student
     student_list = []
     for i in range(0, len(raw_list)):
         raw_list[i] = raw_list[i].strip("\n")
         s_list = raw_list[i].split(";")
-        student = Student.Student(s_list[2].upper(), s_list[1].upper(), int(s_list[3]), s_list[4])
+        student = Student(s_list[2].upper(), s_list[1].upper(), int(s_list[3]), s_list[4])
         student_list.append(student)
     return student_list
 
@@ -103,6 +102,7 @@ def writeToFile(element_add, csv_file):
 
 # appends "na" to grades file when a new course is added
 def appendToFileElements(csv_file, student = None, grade = None):
+    from Course import Course
     # data to append to each row
     data_to_add = "na"
 
@@ -122,7 +122,7 @@ def appendToFileElements(csv_file, student = None, grade = None):
                 if int(row[student_id_index]) == student.getStudentID():
                     # append the data_to_add to end of each row
                     if grade == None:
-                        for i in range(0, int(Course.Course.numberOfCourses)):
+                        for i in range(0, int(Course.numberOfCourses)):
                             row.append(data_to_add)
                     else:
                         # 2: index 1 before grade values are stored

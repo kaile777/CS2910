@@ -3,7 +3,6 @@ from Course import Course
 import Sort
 
 
-# TODO: refactor imports across all files
 
 def display(list, f_comparator = None, semester = None):
     if len(list) == 0:

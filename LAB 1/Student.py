@@ -1,4 +1,3 @@
-from Student import Student
 from Course import Course
 import FileProcessing as fp
 import os
@@ -23,7 +22,7 @@ class Student:
         # must hold grade objects
         # once grades.csv is parsed, grades[] will be updated
         self.grades = []
-        
+
         for i in range(0, Course.numberOfCourses):
             self.grades.append("na")
         
