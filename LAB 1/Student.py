@@ -1,9 +1,11 @@
-import Grade
-import Course
-import csv
-import os
+from Student import Student
+from Course import Course
 import FileProcessing as fp
+import os
 
+
+
+   
 class Student:
     
     __numberOfStudents = 0
@@ -22,7 +24,7 @@ class Student:
         # once grades.csv is parsed, grades[] will be updated
         self.grades = []
         
-        for i in range(0, Course.Course.numberOfCourses):
+        for i in range(0, Course.numberOfCourses):
             self.grades.append("na")
         
     def __str__(self):

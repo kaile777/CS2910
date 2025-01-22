@@ -1,10 +1,9 @@
-import Student
-import Course
-import Grade
+from Student import Student
+from Course import Course
 import Sort
 
 
-
+# TODO: refactor imports across all files
 
 def display(list, f_comparator = None, semester = None):
     if len(list) == 0:
@@ -12,9 +11,9 @@ def display(list, f_comparator = None, semester = None):
     tmp_list = list.copy()
     
     if f_comparator != None:
-        if isinstance(list[0], Student.Student):
+        if isinstance(list[0], Student):
             tmp_list = Sort.merge_sort(tmp_list, lambda element : element.lastName[0])
-        elif isinstance(list[0], Course.Course):
+        elif isinstance(list[0], Course):
             tmp_list = Sort.merge_sort(tmp_list, lambda element : element.name[0])
             
     if semester != None:

@@ -1,5 +1,5 @@
-import Course as Course
 
+# TODO: refactor imports across all files
 
 class Grade:
     

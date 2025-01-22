@@ -3,7 +3,7 @@ import Course
 import Grade
 import csv
 
-
+# TODO: refactor imports across all files
 
 # Reads data from CSV file
 # Each line is stored in a list

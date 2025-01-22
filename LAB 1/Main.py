@@ -1,9 +1,9 @@
-import Student
-import Course
+from Student import Student
+from Course import Course
 import FileProcessing as fp
 import os
 import Display
-import Grade
+from Grade import Grade
 
 
 
@@ -159,7 +159,7 @@ def main():
                 lastName =     input("Enter last name    : ")
                 phoneNum = int(input("Enter phone number : "))
                 email =        input("Enter email        : ")
-                s = Student.Student(firstName.upper(), lastName.upper(), phoneNum, email)
+                s = Student(firstName.upper(), lastName.upper(), phoneNum, email)
                 s_list.append(s)
                 
                 # write to students.csv file
@@ -198,7 +198,7 @@ def main():
                 semester = input("Enter course semester : ")
 
                 # add course object to course list
-                c = Course.Course(name, semester.upper())
+                c = Course(name, semester.upper())
                 c_list.append(c)
 
                 # add course to csv file
@@ -281,7 +281,7 @@ def main():
                         grade_value = int(input("Enter grade (%): "))
                         for course in c_list:
                             if course.code == courseCode:
-                                new_grade = Grade.Grade(course, grade_value)
+                                new_grade = Grade(course, grade_value)
                                 student.addGrade(new_grade)
                                 course.addStudent(student)
                                 fp.updateGrade(student, g_file, new_grade)
@@ -314,7 +314,7 @@ def main():
                 found = False
                 for student in s_list:
                     if student.studentID == sID:
-                        Student.Student.updateStudent(student, s_file)
+                        Student.updateStudent(student, s_file)
                         found = True
                         
                 if found == False:
