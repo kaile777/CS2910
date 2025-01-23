@@ -146,17 +146,3 @@ def updateGrade(student, g_file, grade):
     arr = [str(student.studentID), student.lastName, student.firstName]
     appendToFileElements(g_file, student, grade)
 
-
-def udpateIndex(csv_file, index, add_element, sID):
-    rows = []
-    with open(csv_file, 'r', newline='') as file:
-        reader = csv.reader(file, delimiter=';')
-        for row in reader:
-            if int(row[0]) == sID:
-                row[index] = add_element
-            rows.append(row)
-    
-    # write updated rows back into csv file
-    with open(csv_file, 'w', newline='') as file:
-        writer = csv.writer(file, delimiter=';')
-        writer.writerows(rows)

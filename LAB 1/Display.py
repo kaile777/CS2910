@@ -52,3 +52,7 @@ def displayStudents(list, f_comparator = None):
         print(f"{student.firstName : ^15}", end = " | ")
         print(f"{student.phoneNum : ^10}", end=" | ")
         print(f"{student.email}")
+        
+        
+        
+        

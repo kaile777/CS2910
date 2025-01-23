@@ -62,6 +62,8 @@ def main():
         while True:
             try:
                 option = int(input("->  "))
+                if option < 0 or option > 11:
+                    raise Exception("Selection must be between 0 - 11!")
                 break
             except:
                 print("Select a numer!")
@@ -82,7 +84,15 @@ def main():
             stay_1 = True
             while stay_1 == True:
                 print(display_students)
-                option = int(input("->  "))
+                
+                while True:
+                    try:
+                        option = int(input("->  "))
+                        if option < 1 or option > 3:
+                            raise Exception("Selection must be between 1 - 3!")
+                        break
+                    except:
+                        print("Invalid Input!")
                 
                 os.system('cls')
             
@@ -94,14 +104,9 @@ def main():
                     stay_1 = False
                     os.system('cls')
                     break
-                option = input("Exit (Y/N): ").upper()
-                if option == "Y":
-                    stay_3 = False
-                    os.system('cls')
-                elif option == "N":
-                    stay_3 = True
-                else:
-                    print("Incorrect input!")
+                
+                stay_1 = exit()
+                
                 
         elif option == 2:
             display_courses = """
@@ -120,7 +125,15 @@ def main():
             
             while stay_2 == True:
                 print(display_courses)
-                option = int(input("->  "))
+                
+                while True:
+                    try:
+                        option = int(input("->  "))
+                        if option < 1 or option > 5:
+                            raise Exception("Selection must be between 1 - 5!")
+                        break
+                    except:
+                        print("Invalid input!")
                 
                 os.system('cls')
                 
@@ -129,22 +142,36 @@ def main():
                 elif option == 2:
                     Display.display(c_list, lambda course : course.name[0])
                 elif option == 3:
-                    semester = input("Enter semester (fall or winter): ").upper()
+                    
+                    while True:
+                        try:    
+                            semester = input("Enter semester (fall or winter): ").upper()
+                            if semester != "FALL" and semester != "WINTER":
+                                raise Exception()
+                            break
+                        except:
+                            print("Invalid Input!")
+                            
                     Display.display(c_list, None, semester)
                 elif option == 4:
-                    semester = input("Enter semester (fall or winter): ").upper()
+                    
+                    while True:
+                        try:    
+                            semester = input("Enter semester (fall or winter): ").upper()
+                            if semester != "FALL" and semester != "WINTER":
+                                raise Exception()
+                            break
+                        except:
+                            print("Invalid Input!")
+                    
                     Display.display(c_list, lambda course : course.name[0], semester)
                 elif option == 5:
                     stay_2 = False
                     os.system('cls')
-                option = input("Exit (Y/N): ").upper()
-                if option == "Y":
-                    stay_3 = False
-                    os.system('cls')
-                elif option == "N":
-                    stay_3 = True
-                else:
-                    print("Incorrect input!")
+                    break
+                    
+            
+                stay_2 = exit()
             
         elif option == 3:
             stay_3 = True
@@ -187,14 +214,7 @@ def main():
                 fp.appendToFileElements(g_file, s)
                 
                 
-                option = input("Exit (Y/N): ").upper()
-                if option == "Y":
-                    stay_3 = False
-                    os.system('cls')
-                elif option == "N":
-                    stay_3 = True
-                else:
-                    print("Incorrect input!")
+                stay_3 = exit()
 
 
         elif option == 4:
@@ -205,18 +225,25 @@ def main():
 
                 print("Add Course:\n")
                 
-                
-                # check for duplicate courses
-                while True:
-                    name =     input("Enter name of course  : ").upper()
-                    semester = input("Enter course semester : ").upper()
+                name =     input("Enter name of course                   : ").upper()
 
-                    c = Course(name, semester)
-                    dup_course = (c, c_list)
-                    
-                    if dup_course == False:
+                while True:
+                    try:
+                        semester = input("Enter course semester (Fall or Winter) : ").upper()
+                        if semester != "FALL" and semester != "WINTER":
+                            raise Exception("Selection must be FALL or WINTER!")
+                        
+                        c = Course(name, semester)
+                        dup_course = dupCourse(c, c_list)
+                
+                        if dup_course == True:
+                            print(f"{c.name}, {c.semester} already exists!")
+                            raise Exception()
                         break
-                    print(f"{c.name}, {c.semester} already exists!")
+                    except:
+                        print("Invalid Input")
+                        
+                
                     
                 
                 # add course object to course list
@@ -231,14 +258,8 @@ def main():
                 fp.appendToFileElements(g_file)
 
                 print("\nCourse added:\n", c)
-                option = input("Exit (Y/N): ").upper()
-                if option == "Y":
-                    os.system('cls')
-                    stay_4 = False
-                elif option == "N":
-                    stay_4 = True
-                else:
-                    print("Incorrect input!")
+                
+                stay_4 = exit()
 
         elif option == 5:
 
@@ -246,34 +267,36 @@ def main():
 
             stay_5 = True
             
-            while stay_5 == True:
+            print("Add Student Grade:\n")
             
-                print("Add Student Grade:\n")
-                lastName = input("Enter students last name: ").upper()
-                courseCode = int(input("Enter course code: "))
+            while stay_5 == True:
                 
-                # check that course ID matches existing course
-                c_exists = courseExists(c_list[courseCode - 1], c_list)
-                while not c_exists:
-                    print(f"Course Code: {courseCode}, does not exist!\n")
-                    for course in c_list:
-                        print(f"{course.code}  {course.name}")
-                    courseCode = int(input("Please enter new code: "))
-                    c_exists = (courseCode)
-                    
-
-
+                lastName = input("Enter students last name: ").upper()
                 sID = inputLastName(lastName, s_list)
                 student = s_list[sID - 1]
-                grade_value = int(input("Enter grade (%): "))
                 
-                # check for valid grade value
-                while grade_value < 0 or grade_value > 100:
-                    print("Grade must be > 0 and < 100!")
-                    grade_value = int(input("Enter new grade value: "))
+                while True:
+                    try:
+                        courseCode = int(input("Enter course code: "))
+                        c_exists = courseExists(c_list[courseCode - 1], c_list)
+                        if not c_exists:
+                            raise Exception(f"{courseCode} does not exists!")
+                        break 
+                    except:
+                        print("Invalid Input!\n")
+                        for course in c_list:
+                            print(f"{course.code}  {course.name}")         
                     
-                
-
+                while True:
+                    try:
+                        grade_value = int(input("Enter grade (0-100)% : "))
+                        if grade_value < 0 or grade_value > 100:
+                            raise Exception("Grade value must be >= 0 AND <= 100!")
+                        break
+                    except:
+                        print("Invalid Input!")
+                        
+                        
                 new_grade = Grade(c_list[courseCode - 1], grade_value)
                 student.addGrade(new_grade)
                 c_list[courseCode - 1].addStudent(student)
@@ -283,15 +306,7 @@ def main():
                 if gradeAdded == True:
                     print("Grade added successfuly!")
                 
-                option = input("Exit (y/n): ").upper()
-                
-                if option == "Y":
-                    os.system('cls')
-                    stay_5 = False
-                elif option == "N":
-                    stay_5 = True
-                else:
-                    print("Incorrect input!")
+                stay_5 = exit()
                     
                                 
         elif option == 6:
@@ -301,8 +316,15 @@ def main():
             while stay_6 == True:
                 
                 os.system('cls')
-                print("Update Student Information:\n*** Back: Enter 0 ***\n")
-                sID = int(input("Enter Student ID: "))
+                print("Update Student Information:\n")
+                
+                while True:
+                    try:
+                        sID = int(input("Enter Student ID: "))
+                        break
+                    except:
+                        print("Invalid Input!")
+                
                 found = False
                 for student in s_list:
                     if student.studentID == sID:
@@ -312,14 +334,7 @@ def main():
                 if found == False:
                     print("Student not found!")
                 
-                option = input("Exit? (Y/N) ").upper()
-                if option == "N":
-                    stay_6 = True
-                    os.system('cls')
-                elif option == "Y":
-                    stay_6 = False
-                else:
-                    print("Invalid Input!")
+                stay_6 = exit()
                 
         elif option == 7:
             
@@ -338,19 +353,40 @@ def main():
                 """
                 print(prompt)
                 
-                option = int(input("->  "))
-                
+                while True:
+                    try:
+                        option = int(input("->  "))
+                        if option < 1 or option > 3:
+                            raise Exception("Selection must be between 1 - 3!")
+                        break
+                    except:
+                        print("Invalid Input!")
                
                 found = False
                 os.system('cls')
+                
+                code = None
+                
                 if option == 1:
-                    code = int(input("Enter Code: "))
+                    while True:
+                        try:
+                            code = int(input("Enter Code: "))
+                            for course in c_list:
+                                if course.code == code:
+                                    found = True
+                            if found == False:
+                                raise Exception("Invalid Code!")
+                            break
+                        except:
+                            print("Invalid Code")
+                        
                     element = code
                 elif option == 2:
                     name = input("Enter Name: ").upper()
                     element = name
                 elif option == 3:
                     break
+                
                 for course in c_list:
                     if option == 1:
                         if course.code == element:
@@ -362,16 +398,12 @@ def main():
                             found = True
                             course.getInfo()
                             break
+                        
+                # reduntant
                 if found == False:
                     print("Course not found!")
-                option = input("Exit (Y/N): ").upper()                
-                if option == "Y":
-                    stay_7 = False
-                    os.system('cls')
-                elif option == "N":
-                    stay_7 = True
-                else:
-                    print("Invalid Input!")
+                    
+                stay_7 = exit()
                     
         elif option == 8:
             stay_8 = True
@@ -391,7 +423,14 @@ def main():
                 
                 print(prompt)
                 
-                option = int(input("->  "))
+                while True:
+                    try:
+                        option = int(input("->  "))
+                        if option < 1 or option > 3:
+                            raise Exception()
+                        break
+                    except:
+                        print("Inavlid Input!")
                 
                 if option == 1:
                     lastName = input("Enter Last Name: ")
@@ -399,10 +438,20 @@ def main():
                     student = s_list[sID - 1]
                     print(student)
                 elif option == 2:
-                    number = input("Enter last 4 digits of student phone #: ")
+                    
+                    while True:
+                        try:
+                            number = int(input("Enter last 4 digits of student phone #: "))
+                            if getDigits(number) > 4:
+                                print("Must be 4 digits!")
+                                raise Exception()
+                            break
+                        except:
+                            print("Invalid Input!")
+                            
                     match = False
                     for student in s_list:
-                        last4digits = str(student.phoneNum)
+                        last4digits = student.phoneNum
                         last4digits = last4digits[-4:]
                         if last4digits == number[-4:]:
                             os.system('cls')
@@ -417,12 +466,7 @@ def main():
                 else:
                     print("Invalid Input!")
                     
-                option = input("Exit (Y/N): ").upper()                
-                if option == "Y":
-                    stay_8 = False
-                    os.system('cls')
-                elif option == "N":
-                    stay_8 = True
+                stay_8 = exit()
         
         elif option == 9:
             stay_9 = True
@@ -438,12 +482,7 @@ def main():
                 for grade in student.grades:
                     print(grade)
                     
-                option = input("Exit (Y/N): ").upper()                
-                if option == "Y":
-                    stay_9 = False
-                    os.system('cls')
-                elif option == "N":
-                    stay_9 = True
+                stay_9 = exit()
         
         elif option == 10:
             stay_10 = True
@@ -453,7 +492,6 @@ def main():
                 print("View Student Averages\n")
                 
                 lastName = input("Enter Student Last Name: ").upper()
-                
                 sID = inputLastName(lastName, s_list)
                 student = s_list[sID - 1]
                 
@@ -487,7 +525,16 @@ def main():
                             total += int(grade.grade_val)
                 elif option == 2:
                     # display term average
-                    sem = input("Enter Semester: ").upper()
+                    
+                    while True:
+                        try:
+                            sem = input("Enter Semester: ").upper()
+                            if sem != "FALL" or sem != "WINTER":
+                                raise Exception()
+                            break
+                        except:
+                            print("Invalid Input")
+
                     for grade in student.grades:
                         if grade.grade_val != "na" and grade.course.semester == sem:
                             courseCount += 1
@@ -501,26 +548,32 @@ def main():
                 else:
                     print(f"No courses taken in {sem}!")
                     
-                option = input("Exit (Y/N): ").upper()                
-                if option == "Y":
-                    stay_10 = False
-                    os.system('cls')
-                elif option == "N":
-                    stay_10 = True
-   
+                stay_10 = exit()
    
    
 
                     
         elif option == 11:
-            stay_12 = True
+            stay_11 = True
             
-            while stay_12 == True:
+            while stay_11 == True:
                 os.system('cls')
                 print("Seach Course Average (%)\n")
                 
-                courseName = input("Enter Course Name: ").upper()
-                
+                found = False
+                while True:
+                    try:
+                        courseName = input("Enter Course Name: ").upper()
+                        for course in c_list:
+                            if courseName == course.name.upper():
+                                found = True
+                                break
+                        if found == False:
+                            raise Exception()
+                        break
+                    except:
+                        print("Invalid Input!")
+                        
                 match = False
                 term_avg = 0
                 for course in c_list:
@@ -544,12 +597,8 @@ def main():
                     print(f"Term Average for {courseName}: {term_avg}%")
                 else:
                     print("Course has no grades associated with it!") 
-                option = input("\nExit (Y/N): ").upper()                
-                if option == "Y":
-                    stay_12 = False
-                    os.system('cls')
-                elif option == "N":
-                    stay_12 = True
+                
+                stay_11 = exit()
 
             
         elif option == 0:
@@ -558,11 +607,16 @@ def main():
         else:
             print("Invalid Input!")
         
+
         
         
         
-        
-        
+def dupCourse(course, c_list):
+    for c in c_list:
+        if c.code == course.code:
+            return True
+    return False
+            
 
 
 # HELPER FUNCTIONS
@@ -590,7 +644,7 @@ def inputLastName(lastName, s_list):
     elif len(list_students) < 1:
         print(f"({lastName}) not found!")
         lastName = input("Enter Last Name: ").upper()
-        sID = inputLastName(lastName)
+        sID = inputLastName(lastName, s_list)
     
     return list_students[0].studentID
 
@@ -620,8 +674,23 @@ def showCourseContents(c_list):
             print(student, "\n")
 
 
-        
-        
+def exit():
+    while True:
+        try:
+            option = input("Exit (Y/N): ").upper()
+            if option != "Y" and option != "N":
+                raise Exception("Selection must be (Y) or (N)!")
+            break
+        except:
+            print("Invalid Input!")
+                
+    if option == "Y":
+        os.system('cls')
+        return False
+
+    return True
+
+            
         
         
 
