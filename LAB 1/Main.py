@@ -127,12 +127,21 @@ def main():
                 os.system('cls')
             
                 if option == 1:
-                    Display.display(s_list)
+                    Display.displayStudents(s_list)
                 elif option == 2:
-                    Display.display(s_list, lambda student : student.lastName[0])
+                    Display.displayStudents(s_list, lambda student : student.lastName[0])
                 elif option == 3:
                     stay_1 = False
                     os.system('cls')
+                    break
+                option = input("Exit (Y/N): ").upper()
+                if option == "Y":
+                    stay_3 = False
+                    os.system('cls')
+                elif option == "N":
+                    stay_3 = True
+                else:
+                    print("Incorrect input!")
                 
         elif option == 2:
             display_courses = """
@@ -288,12 +297,7 @@ def main():
                     courseCode = int(input("Please enter new code: "))
                     c_exists = (courseCode)
                     
-                
-                """
-                TODO: Need to add duplicate last name checks
-                      Handle repeated input for last name
-                """
-                
+
 
                 sID = inputLastName(lastName, s_list)
                 student = s_list[sID - 1]
@@ -419,11 +423,7 @@ def main():
                 3. Exit
                 
                 """
-                
-                """
-                TODO: Need to add duplicate last name checks
-                      Handle repeated input for last name
-                """
+
                 
                 print(prompt)
                 
@@ -487,10 +487,7 @@ def main():
                 lName = input("Enter Student Last Name: ").upper()
                 
                 students_w_lastName = []
-                """
-                TODO: Need to add duplicate last name checks
-                      Handle repeated input for last name
-                """
+
                 for student in s_list:
                     if student.lastName == lName:
                         students_w_lastName.append(student)
@@ -530,10 +527,7 @@ def main():
                 os.system('cls')
                 lName = input("Enter Student Last Name: ").upper()
                 
-                """
-                TODO: Need to add duplicate last name checks
-                      Handle repeated input for last name
-                """
+
                 
                 students_w_lastName = []
                 # check for multiple last names
@@ -593,11 +587,7 @@ def main():
                 os.system('cls')
                 lName = input("Enter Student Last Name: ").upper()
                 semester = input("Enter Term (Fall/Winter): ").upper()
-                
-                """
-            TODO: Need to add duplicate last name checks
-                  Handle repeated input for last name
-                """
+            
                 
                 students_w_lastName = []
                 # check for multiple last names
