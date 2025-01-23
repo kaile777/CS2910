@@ -54,7 +54,7 @@ class Student:
         for grade in self.grades:
             print(grade)
         
-    def updateStudent(student, s_file):
+    def updateStudent(student, s_file, g_file):
         
         prompt = """
                     
@@ -84,10 +84,12 @@ class Student:
                 firstName = input("Enter First Name: ").upper()
                 student.firstName = firstName
                 fp.udpateIndex(s_file, pos_fName, firstName, student.studentID)
+                fp.udpateIndex(g_file, pos_fName, firstName, student.studentID)
             elif option == 2:
                 lastName = input("Enter Last Name: ").upper()
                 student.lastName = lastName
                 fp.udpateIndex(s_file, pos_lName, lastName, student.studentID)
+                fp.udpateIndex(g_file, pos_lName, lastName, student.studentID)
             elif option == 3:
                 phoneNum = int(input("Enter Phone Number: "))
                 student.phoneNum = phoneNum

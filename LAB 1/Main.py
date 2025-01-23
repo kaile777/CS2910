@@ -17,8 +17,6 @@ c_list = []
 
 
 
-
-
 def main():
     s_file = "students.csv"
     c_file = "courses.csv"
@@ -337,7 +335,7 @@ def main():
                 found = False
                 for student in s_list:
                     if student.studentID == sID:
-                        Student.updateStudent(student, s_file)
+                        Student.updateStudent(student, s_file, g_file)
                         found = True
                         
                 if found == False:
