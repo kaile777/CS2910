@@ -9,51 +9,6 @@ s_list = []
 g_list = []
 c_list = []
 
-def inputLastName(lastName, s_list):
-    list_students = uniqueLastName(lastName, s_list)
-    if len(list_students) > 1:
-        print("Duplicate last names found!\n")
-        for student in list_students:
-            print(f"{student.studentID}  {student.lastName}, {student.firstName}")
-        while True:
-            sID = int(input("Please Enter Student ID: "))
-            for student in list_students:
-                if sID == student.studentID:
-                    return sID
-            print("Student not found!")
-    elif len(list_students) < 1:
-        print(f"({lastName}) not found!")
-        lastName = input("Enter Last Name: ").upper()
-        sID = inputLastName(lastName)
-    
-    return list_students[0].studentID
-
-
-def uniqueLastName(lName, s_list):
-    students_w_lastName = []
-    # check for multiple last names
-    for student in s_list:
-        if student.lastName == lName:
-            students_w_lastName.append(student)
-    return students_w_lastName
-        
-
-def courseExists(course, c_list):
-    for c in c_list:
-        if c.code == course.code:
-            return True
-        if c.name == course.name and c.semester == course.semester:
-            return True
-    return False
-
-
-def showCourseContents(c_list):
-    for course in c_list:
-        print(f"{course.name}\n**********\n")
-        for student in course.studentsInCourse:
-            print(student, "\n")
-
-
 
 def main():
     s_file = "students.csv"
@@ -93,9 +48,8 @@ def main():
     8.  Search Student
     9.  Display Student Courses & Grades
     10. Display Student Average Total
-    11. Display Student Average (Term)
-    12. Display Course Average
-    
+    11. Display Course Average
+
     0. EXIT PROGRAM
     
     """
@@ -104,9 +58,15 @@ def main():
     while stay_program == True:
         print(title)
         print(main_menu)
-        option = int(input("->  "))
-        os.system('cls')
         
+        while True:
+            try:
+                option = int(input("->  "))
+                break
+            except:
+                print("Select a numer!")
+        os.system('cls')
+    
         if option == 1:
             
             display_students = """"
@@ -200,7 +160,11 @@ def main():
                 while True:
                     try:
                         phoneNum = int(input("Enter phone number : "))
-                        break
+                        digits = getDigits(phoneNum)
+                        if digits > 0 and digits <= 10:
+                            break
+                        print("Invalid Phone Number!")
+                        print("Greater than 0 | Less than or equal to 10")
                     except:
                         print("Must be a number!")
                         
@@ -430,29 +394,10 @@ def main():
                 option = int(input("->  "))
                 
                 if option == 1:
-                    lName = input("Enter Last Name: ").upper()
-                    students_w_lastName = []
-                    # check for multiple last names
-                    for student in s_list:
-                        if student.lastName == lName:
-                            students_w_lastName.append(student)
-                    if len(students_w_lastName) > 1:
-                        print(f"Multiple students with last name: {lName}\n")
-                        for student in students_w_lastName:
-                            print(student, "\n")
-                        sID = int(input("Please select student by ID: "))
-                        match = False
-                        for student in students_w_lastName:
-                            if student.studentID == sID:
-                                print(student)
-                                match = True
-                        if match == False:
-                            print("Student ID entered does not match student list!")
-                    elif len(students_w_lastName) == 1:
-                        for student in students_w_lastName:
-                            print(student)
-                    else:
-                        print(f"No students with last name, {lName}")
+                    lastName = input("Enter Last Name: ")
+                    sID = inputLastName(lastName, s_list)
+                    student = s_list[sID - 1]
+                    print(student)
                 elif option == 2:
                     number = input("Enter last 4 digits of student phone #: ")
                     match = False
@@ -461,7 +406,7 @@ def main():
                         last4digits = last4digits[-4:]
                         if last4digits == number[-4:]:
                             os.system('cls')
-                            print(student,"\n")
+                            print("\n",student,"\n")
                             match = True
                     if match == False:
                         number = number[-4:]
@@ -484,34 +429,14 @@ def main():
             
             while stay_9 == True:
                 os.system('cls')
-                lName = input("Enter Student Last Name: ").upper()
+                print("Display Student Courses & Grades\n")
                 
-                students_w_lastName = []
-
-                for student in s_list:
-                    if student.lastName == lName:
-                        students_w_lastName.append(student)
-                if len(students_w_lastName) > 1:
-                    print(f"Multiple students with last name: {lName}\n")
-                    for student in students_w_lastName:
-                        print(student, "\n")
-                    sID = int(input("Please select student by ID: "))
-                    match = False
-                    for student in students_w_lastName:
-                        if student.studentID == sID:
-                            # display student grades
-                            for grade in student.grades:
-                                grade.getInfo()
-                                match = True
-                    if match == False:
-                        print("Student ID entered does not match student list!")
-                elif len(students_w_lastName) == 1:
-                    for student in students_w_lastName:
-                        # display student grades
-                            for grade in student.grades:
-                                grade.getInfo()
-                else:
-                    print(f"No students with last name, {lName}")
+                lastName = input("Enter Last Name: ")
+                sID = inputLastName(lastName, s_list)
+                student = s_list[sID - 1]
+                
+                for grade in student.grades:
+                    print(grade)
                     
                 option = input("Exit (Y/N): ").upper()                
                 if option == "Y":
@@ -525,53 +450,56 @@ def main():
             
             while stay_10 == True:
                 os.system('cls')
-                lName = input("Enter Student Last Name: ").upper()
+                print("View Student Averages\n")
                 
-
+                lastName = input("Enter Student Last Name: ").upper()
                 
-                students_w_lastName = []
-                # check for multiple last names
-                for student in s_list:
-                    if student.lastName == lName:
-                        students_w_lastName.append(student)
+                sID = inputLastName(lastName, s_list)
+                student = s_list[sID - 1]
+                
+                prompt = """
+                
+                1. Display total average
+                2. Display semester average
+                3. Exit
+                
+                """
+                
+                print(prompt)
+                while True:
+                    try:
+                        option = int(input("->  "))
+                        if option < 4 and option > 0:
+                            break
+                        raise Exception("Invalid Input!")
+                    except:
+                        print("Please try again...\n")
                         
-                courseCount = 0
                 total = 0
-
-                if len(students_w_lastName) > 1:
-                    print(f"Multiple students with last name: {lName}\n")
-                    for student in students_w_lastName:
-                        print(student, "\n")
-                    sID = int(input("Please select student by ID: "))
-                    match = False
-                    for student in students_w_lastName:
-                        if student.studentID == sID:
-                            # display student average
-                            match = True
-                            for grade in student.grades:
-                                if grade.grade_val != "na":
-                                    courseCount += 1
-                                    total += int(grade.grade_val)
-                            if courseCount > 0:
-                                average = (total // courseCount) 
-                                print(f"Total Average: {average}%")
-                            
-                    if match == False:
-                        print("Student ID entered does not match student list!")
-                elif len(students_w_lastName) == 1:
-                    for student in students_w_lastName:
-                        # display student average
-                        total = 0
-                        for grade in student.grades:
-                            if grade.grade_val != "na":
-                                    courseCount += 1
-                                    total += int(grade.grade_val)
-                        if courseCount > 0:
-                            average = (total // courseCount) 
-                            print(f"Total Average: {average}%")
-
+                courseCount = 0
+                sem = ""
+                
+                if option == 1:
+                    # display student average
+                    for grade in student.grades:
+                        if grade.grade_val != "na":
+                            courseCount += 1
+                            total += int(grade.grade_val)
+                elif option == 2:
+                    # display term average
+                    sem = input("Enter Semester: ").upper()
+                    for grade in student.grades:
+                        if grade.grade_val != "na" and grade.course.semester == sem:
+                            courseCount += 1
+                            total += int(grade.grade_val)
+                elif option == 3:
+                    break
+                    
+                if courseCount > 0:
+                    average = (total // courseCount) 
+                    print(f"Total Average: {average}%")
                 else:
-                    print(f"No students with last name, {lName}")
+                    print(f"No courses taken in {sem}!")
                     
                 option = input("Exit (Y/N): ").upper()                
                 if option == "Y":
@@ -579,65 +507,12 @@ def main():
                     os.system('cls')
                 elif option == "N":
                     stay_10 = True
-            
-        elif option == 11:
-            stay_11 = True
-            
-            while stay_11 == True:
-                os.system('cls')
-                lName = input("Enter Student Last Name: ").upper()
-                semester = input("Enter Term (Fall/Winter): ").upper()
-            
-                
-                students_w_lastName = []
-                # check for multiple last names
-                for student in s_list:
-                    if student.lastName == lName:
-                        students_w_lastName.append(student)
-                courseCount = 0
-                total = 0
-                if len(students_w_lastName) > 1:
-                    print(f"Multiple students with last name: {lName}\n")
-                    for student in students_w_lastName:
-                        print(student, "\n")
-                    sID = int(input("Please select student by ID: "))
-                    match = False
-                    for student in students_w_lastName:
-                        if student.studentID == sID:
-                            # display student average
-                            match = True
-                            for grade in student.grades:
-                                if grade.grade_val != "na" and grade.course.semester == semester:
-                                    courseCount += 1
-                                    total += int(grade.grade_val)
-                            if courseCount > 0:
-                                average = (total // courseCount) 
-                                print(f"Total Average: {average}%")
-                            
-                    if match == False:
-                        print("Student ID entered does not match student list!")
-                elif len(students_w_lastName) == 1:
-                    for student in students_w_lastName:
-                        # display student average
-                        for grade in student.grades:
-                            if grade.grade_val != "na" and grade.course.semester == semester:
-                                    courseCount += 1
-                                    total += int(grade.grade_val)
-                        if courseCount > 0:
-                            average = (total // courseCount) 
-                            print(f"Total Average: {average}%")
+   
+   
+   
 
-                else:
-                    print(f"No students with last name, {lName}")
                     
-                option = input("Exit (Y/N): ").upper()                
-                if option == "Y":
-                    stay_11 = False
-                    os.system('cls')
-                elif option == "N":
-                    stay_11 = True
-                    
-        elif option == 12:
+        elif option == 11:
             stay_12 = True
             
             while stay_12 == True:
@@ -682,6 +557,71 @@ def main():
         
         else:
             print("Invalid Input!")
+        
+        
+        
+        
+        
+        
+
+
+# HELPER FUNCTIONS
+def getDigits(num):
+    digits = 0
+    while num != 0:
+        digits += 1
+        num = num // 10
+    return digits
+
+
+def inputLastName(lastName, s_list):
+    lastName = lastName.upper()
+    list_students = uniqueLastName(lastName, s_list)
+    if len(list_students) > 1:
+        print("Duplicate last names found!\n")
+        for student in list_students:
+            print(f"{student.studentID}  {student.lastName}, {student.firstName}")
+        while True:
+            sID = int(input("Please Enter Student ID: "))
+            for student in list_students:
+                if sID == student.studentID:
+                    return sID
+            print("Student not found!")
+    elif len(list_students) < 1:
+        print(f"({lastName}) not found!")
+        lastName = input("Enter Last Name: ").upper()
+        sID = inputLastName(lastName)
+    
+    return list_students[0].studentID
+
+
+def uniqueLastName(lName, s_list):
+    students_w_lastName = []
+    # check for multiple last names
+    for student in s_list:
+        if student.lastName == lName:
+            students_w_lastName.append(student)
+    return students_w_lastName
+        
+
+def courseExists(course, c_list):
+    for c in c_list:
+        if c.code == course.code:
+            return True
+        if c.name == course.name and c.semester == course.semester:
+            return True
+    return False
+
+
+def showCourseContents(c_list):
+    for course in c_list:
+        print(f"{course.name}\n**********\n")
+        for student in course.studentsInCourse:
+            print(student, "\n")
+
+
+        
+        
         
         
 

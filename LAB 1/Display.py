@@ -37,7 +37,7 @@ def displayStudents(list, f_comparator = None):
             print("List content is not related to students!")
             return
             
-    
+    print("\n")
     print(f"{'ID' : ^4}", end = " | ")
     print(f"{'LAST NAME' : ^13}", end = " | ")
     print(f"{'FIRST NAME' : ^15}", end = " | ")
