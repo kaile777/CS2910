@@ -10,6 +10,15 @@ g_list = []
 c_list = []
 
 
+
+
+
+
+
+
+
+
+
 def main():
     s_file = "students.csv"
     c_file = "courses.csv"
@@ -630,23 +639,34 @@ def getDigits(num):
 
 def inputLastName(lastName, s_list):
     lastName = lastName.upper()
-    list_students = uniqueLastName(lastName, s_list)
-    if len(list_students) > 1:
+    unique_list = uniqueLastName(lastName, s_list)
+    sID = 0
+    if len(unique_list) > 1:
         print("Duplicate last names found!\n")
-        for student in list_students:
+        for student in unique_list:
             print(f"{student.studentID}  {student.lastName}, {student.firstName}")
         while True:
             sID = int(input("Please Enter Student ID: "))
-            for student in list_students:
+            for student in unique_list:
                 if sID == student.studentID:
                     return sID
             print("Student not found!")
-    elif len(list_students) < 1:
+    elif len(unique_list) < 1:
         print(f"({lastName}) not found!")
-        lastName = input("Enter Last Name: ").upper()
-        sID = inputLastName(lastName, s_list)
-    
-    return list_students[0].studentID
+        while True:
+            lastName = input("Enter Last Name: ").upper()
+            unique_list = uniqueLastName(lastName, s_list)
+            if len(unique_list) == 1:
+                break
+            print("DUPLICATE\n")
+            for student in unique_list:
+                print(f"{student.studentID}  {student.lastName}, {student.firstName}")
+            sID = int(input("Please Enter Student ID: "))
+            for student in unique_list:
+                if sID == student.studentID:
+                    return sID
+        
+    return unique_list[0].studentID
 
 
 def uniqueLastName(lName, s_list):
