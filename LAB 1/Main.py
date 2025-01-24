@@ -448,8 +448,8 @@ def main():
                     
                     while True:
                         try:
-                            number = int(input("Enter last 4 digits of student phone #: "))
-                            if getDigits(number) > 4:
+                            number = input("Enter last 4 digits of student phone #: ")
+                            if getDigits(int(number)) >= 4:
                                 print("Must be 4 digits!")
                                 raise Exception()
                             break
@@ -458,7 +458,7 @@ def main():
                             
                     match = False
                     for student in s_list:
-                        last4digits = student.phoneNum
+                        last4digits = str(student.phoneNum)
                         last4digits = last4digits[-4:]
                         if last4digits == number[-4:]:
                             os.system('cls')
@@ -536,7 +536,7 @@ def main():
                     while True:
                         try:
                             sem = input("Enter Semester: ").upper()
-                            if sem != "FALL" or sem != "WINTER":
+                            if sem != "FALL" and sem != "WINTER":
                                 raise Exception()
                             break
                         except:
