@@ -1,0 +1,5 @@
+Len([PhoneNumber])=10
+Is Not Null
+Len([FirstName]) Between 1 And 50
+Like "[A-Za-z ]*"
+Like "*?@?*.*"
